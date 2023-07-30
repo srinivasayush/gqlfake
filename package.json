@@ -1,7 +1,7 @@
 {
-  "name": "firebase-data-generator",
-  "version": "0.0.1",
-  "description": "",
+  "name": "graphql-datagen",
+  "version": "0.1.0",
+  "description": "CLI tool that can be used to create fake, structured data using GraphQL schemas to specify fields and data types",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
