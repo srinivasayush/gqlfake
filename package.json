@@ -1,14 +1,16 @@
 {
-  "name": "graphql-datagen",
+  "name": "gqlfake",
   "version": "0.1.0",
   "description": "CLI tool that can be used to create fake, structured data using GraphQL schemas to specify fields and data types",
-  "main": "index.js",
+  "bin": {
+    "gqlfake": "build/index.js"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "DudeBro249",
-  "license": "ISC",
+  "license": "Apache-2.0",
   "devDependencies": {
     "typescript": "^5.1.6"
   },
