@@ -5,6 +5,7 @@ import { faker } from '@faker-js/faker';
 import ScopedEval from 'scoped-eval';
 import { Command } from 'commander';
 import { integerValidator } from '../optionValidators'
+import { GENERATE_DIRECTIVE_ARGUMENT_NAME, GENERATE_DIRECTIVE_NAME } from '../constants';
 
 // Options for the generate command
 interface GenerateOptions {
@@ -47,7 +48,7 @@ const generateAction = async (options: GenerateOptions) => {
         let field: FieldDefinitionNode = definition.fields[i]
         
         // Get all @generate directives next to a field
-        const generateDirectives = (field.directives!.filter(directive => directive.name.value === 'generate'))
+        const generateDirectives = (field.directives!.filter(directive => directive.name.value === GENERATE_DIRECTIVE_NAME))
   
         if (generateDirectives.length === 0) {
           // No @generate directives attached to field
@@ -69,20 +70,26 @@ const generateAction = async (options: GenerateOptions) => {
         }
   
         if (generateDirective.arguments.length > 1) {
-          console.error('The @generate directive ');
+          console.error('You have passed too many arguments into the @generate directive. Only one is allowed.')
           process.exit(1)
         }
   
         const fieldName = field.name.value
   
+        // Check that the generate directive has been passed an argument with the correct name
+        if (generateDirective.arguments[0].name.value != GENERATE_DIRECTIVE_ARGUMENT_NAME) {
+          console.error("The @generate directive only accepts one argument called 'data'")
+          process.exit(1)
+        }
+
         // Get data type passed into @generate's faker parameter
-        const dataType = (generateDirective.arguments[0].value as any).value as string
+        const dataScript = (generateDirective.arguments[0].value as any).value as string
   
         const evaluator = new ScopedEval();
   
         // Generate fake data and put it into documentsForType
         for (let i = 0; i < options.numDocuments; i++) {
-          const fakeData = evaluator.eval(`faker.${dataType}()`, { faker: faker })
+          const fakeData = evaluator.eval(dataScript, { faker: faker })
           documentsForType[i][fieldName] = fakeData
         }
       }

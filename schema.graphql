@@ -1,4 +1,4 @@
 type User {
-  name: String @generate(faker: "person.fullName")
-  avatar_url: String @generate(faker: "internet.avatar")
+  name: String @generate(data: "faker.person.fullName()")
+  avatar_url: String @generate(data: "faker.internet.avatar()")
 }
