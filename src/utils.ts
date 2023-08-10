@@ -11,4 +11,6 @@ const integerValidator = (flagName: string, value: any) => {
     return parsedIntValue
 }
 
-export { integerValidator }
+export {
+    integerValidator
+}

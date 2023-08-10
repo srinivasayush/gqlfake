@@ -12,13 +12,17 @@
   "author": "DudeBro249",
   "license": "Apache-2.0",
   "devDependencies": {
+    "@types/pluralize": "^0.0.30",
     "typescript": "^5.1.6"
   },
   "dependencies": {
     "@faker-js/faker": "^8.0.2",
     "chalk": "^4.1.2",
     "commander": "^11.0.0",
+    "dedent-js": "^1.0.1",
+    "firebase-admin": "^11.10.1",
     "graphql": "^16.7.1",
+    "pluralize": "^8.0.0",
     "scoped-eval": "^0.4.2"
   }
 }
