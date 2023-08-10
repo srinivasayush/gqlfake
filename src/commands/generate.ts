@@ -4,7 +4,7 @@ import * as fsPromises from 'fs/promises'
 import { faker } from '@faker-js/faker';
 import ScopedEval from 'scoped-eval';
 import { Command } from 'commander';
-import { integerValidator } from '../optionValidators'
+import { integerValidator } from '../utils'
 import { GENERATE_DIRECTIVE_ARGUMENT_NAME, GENERATE_DIRECTIVE_NAME } from '../constants';
 
 // Options for the generate command
