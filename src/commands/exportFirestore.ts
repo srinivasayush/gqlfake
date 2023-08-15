@@ -71,6 +71,7 @@ const exportFirestoreAction = async (options: ExportFirestoreOptions) => {
 // Create the generate command
 const exportFirestoreCommand = new Command()
                     .name('export-firestore')
+                    .description("Exports the generated fake data to Google's Cloud Firestore Database")
                     .requiredOption(
                         '-k, --keypath <path>',
                         'The path to your service account key JSON file',
@@ -79,4 +80,4 @@ const exportFirestoreCommand = new Command()
                     .action(exportFirestoreAction)
 
 
-export { exportFirestoreCommand }
+export { exportFirestoreCommand, exportFirestoreAction, ExportFirestoreOptions }

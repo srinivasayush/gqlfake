@@ -131,16 +131,17 @@ const generateAction = async (options: GenerateOptions) => {
 // Create the generate command
 const generateCommand = new Command()
                     .name('generate')
+                    .description('Generates fake data using your GraphQL schema')
                     .requiredOption(
                       '-s, --schema-path <path>', 
                       'The path to your GraphQL schema file'
                     )
                     .option<number>('-n, --num-documents <integer>',
-                                    'The number of JSON objects to be generated per type defined in your GraphQL schema',
+                                    'The number of JSON objects to be generated for each type defined in your GraphQL schema',
                                     (value, _) => integerValidator('--num-documents', value),
                                     1 // default value for --num-documents
                     )
                     .action(generateAction)
 
 
-export { generateCommand }
+export { generateCommand, generateAction, GenerateOptions }

@@ -1,16 +1,31 @@
 {
   "name": "gqlfake",
-  "version": "0.1.0",
-  "description": "CLI tool that can be used to create fake, structured data using GraphQL schemas to specify fields and data types",
-  "bin": {
-    "gqlfake": "build/index.js"
-  },
+  "version": "0.1.5",
+  "description": "A CLI tool that can be used to create fake, structured data using GraphQL schemas to specify fields and data types",
+
+  "main": "dist/index.js",
+  "bin": "dist/cli.js",
+  "types": "dist",
+  "files": ["dist"],
+
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "npx tsc"
   },
-  "keywords": [],
+
+  "keywords": [
+    "fake",
+    "data",
+    "generator",
+    "graphql"
+  ],
   "author": "DudeBro249",
   "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DudeBro249/gqlfake"
+  },
+
   "devDependencies": {
     "@types/pluralize": "^0.0.30",
     "typescript": "^5.1.6"
