@@ -1,4 +1,4 @@
-import { parse, ObjectTypeDefinitionNode, FieldDefinitionNode } from 'graphql/language'
+import { parse, ObjectTypeDefinitionNode, FieldDefinitionNode, DocumentNode } from 'graphql/language'
 import * as fs from 'fs'
 import * as fsPromises from 'fs/promises'
 import { faker } from '@faker-js/faker';
@@ -7,6 +7,8 @@ import { Command } from 'commander';
 import { integerValidator } from '../utils'
 import { GENERATE_DIRECTIVE_ARGUMENT_NAME, GENERATE_DIRECTIVE_NAME } from '../constants';
 import { errorStyle } from '../textStyles';
+import { GraphQLError } from 'graphql';
+import path from 'path'
 
 // Options for the generate command
 interface GenerateOptions {
@@ -24,10 +26,35 @@ const generateAction = async (options: GenerateOptions) => {
     
     // Read and parse schema
     const schemaContentBuffer = await fsPromises.readFile(options.schemaPath)
-    const document = parse(schemaContentBuffer.toString())
+
+    let graphQLDocument: DocumentNode | undefined = undefined;
+
+    try {
+      graphQLDocument = parse(schemaContentBuffer.toString())
+    } catch (error) {
+
+      if(error instanceof GraphQLError) {
+        console.log(errorStyle('There was an error parsing your GraphQL schema'));
+        
+        console.error(errorStyle(`${error.name}: ${error.message}`));
+
+        // Log each location where the error is present
+        if(error.locations !== undefined) {
+          for(let location of error.locations) {
+            console.error(errorStyle(`- Location: Line ${location.line}, Column: ${location.column}. ${options.schemaPath}:${location.line}:${location.column}`));
+          }
+        }
+      }
+      else {
+        console.error(`Error parsing ${options.schemaPath}`);
+      }
+
+      process.exit(1)
+    }
+    
   
     // Get all types defined in schema
-    const definitions = document.definitions.filter(definition => definition.kind === 'ObjectTypeDefinition') as ObjectTypeDefinitionNode[]
+    const definitions = graphQLDocument.definitions.filter(definition => definition.kind === 'ObjectTypeDefinition') as ObjectTypeDefinitionNode[]
   
     definitions.forEach(async definition => {
 
@@ -80,10 +107,10 @@ const generateAction = async (options: GenerateOptions) => {
           process.exit(1)
         }
   
-        if (generateDirective.arguments.length > 1) {
+        if (generateDirective.arguments.length > 2) {
           console.error(
             errorStyle(
-              `You have passed too many arguments into the @generate directive next to "${fieldName}" under type "${typeName}". Only one is allowed.`
+              `You have passed too many arguments into the @generate directive next to "${fieldName}" under type "${typeName}". Only a maximum of two are allowed.`
             )
           )
           process.exit(1)
@@ -139,7 +166,8 @@ const generateCommand = new Command()
                     .description('Generates fake data using your GraphQL schema')
                     .requiredOption(
                       '-s, --schema-path <path>', 
-                      'The path to your GraphQL schema file'
+                      'The path to your GraphQL schema file',
+                      (value: any) => path.resolve(value)
                     )
                     .option<number>('-n, --num-documents <integer>',
                                     'The number of JSON objects to be generated for each type defined in your GraphQL schema',
