@@ -1,4 +1,5 @@
 type User {
-  name: String @generate(data: "faker.person.fullName()")
-  avatar_url: String @generate(data: "faker.internet.avatar()")
+  firstName: String @generate(data: "faker.person.firstName()")
+  lastName: String @generate(data: "faker.person.lastName()")
+  emailID: String @generate(data: "faker.internet.email({ firstName: firstName, lastName: lastName })")
 }

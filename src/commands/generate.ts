@@ -33,7 +33,7 @@ const generateAction = async (options: GenerateOptions) => {
 
       const typeName = definition.name.value
   
-      // documentsForType is initialized with NUM_DOCUMENTS empty objects
+      // documentsForType is initialized with options.numDocuments empty objects
       const documentsForType: any[] = [...Array(options.numDocuments).keys()].map(i => {
         let emptyObj = {}
         return emptyObj
@@ -108,13 +108,18 @@ const generateAction = async (options: GenerateOptions) => {
   
         // Generate fake data and put it into documentsForType
         for (let i = 0; i < options.numDocuments; i++) {
-          const fakeData = evaluator.eval(dataScript, { faker: faker })
+          const fakeData = evaluator.eval(dataScript,
+            {
+              faker: faker,
+              console: console,
+              ...documentsForType[i]
+            }
+          )
           documentsForType[i][fieldName] = fakeData
         }
       }
-  
+
       // Export documentsForType to JSON
-  
       if (!fs.existsSync(`./datagen/`)) {
         await fsPromises.mkdir(`./datagen/`, { recursive: true })
       }
