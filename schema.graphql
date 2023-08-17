@@ -1,5 +1,25 @@
 type User {
-  firstName: String @generate(data: "faker.person.firstName()")
-  lastName: String @generate(data: "faker.person.lastName()")
-  emailID: String @generate(data: "faker.internet.email({ firstName: firstName, lastName: lastName })")
+  firstName: String 
+    @generate(
+      data: """
+      firstName = faker.person.firstName()
+      return firstName
+      """
+    )
+  lastName: String 
+    @generate(
+      data: """
+      lastName = faker.person.lastName()
+      return lastName
+      """
+    )
+  emailID: String
+    @generate(
+      data: """
+      return faker.internet.email({
+        firstName: firstName,
+        lastName: lastName
+      })
+      """
+    )
 }

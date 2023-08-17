@@ -3,7 +3,7 @@ const TOOL_DESCRIPTION = 'A CLI tool that can be used to create fake, structured
 const VERSION = '0.1.5'
 
 const GENERATE_DIRECTIVE_NAME = 'generate'
-const GENERATE_DIRECTIVE_ARGUMENT_NAME = 'data'
+const GENERATE_DIRECTIVE_DATA_ARGUMENT_NAME = 'data'
 
 export {
     TOOL_NAME,
@@ -11,5 +11,5 @@ export {
 
     VERSION,
     GENERATE_DIRECTIVE_NAME,
-    GENERATE_DIRECTIVE_ARGUMENT_NAME
+    GENERATE_DIRECTIVE_DATA_ARGUMENT_NAME
 }

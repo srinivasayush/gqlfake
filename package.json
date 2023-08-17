@@ -2,17 +2,16 @@
   "name": "gqlfake",
   "version": "0.1.5",
   "description": "A CLI tool that can be used to create fake, structured data using GraphQL schemas to specify fields and data types",
-
   "main": "dist/index.js",
   "bin": "dist/cli.js",
   "types": "dist",
-  "files": ["dist"],
-
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "npx tsc"
   },
-
   "keywords": [
     "fake",
     "data",
@@ -25,7 +24,6 @@
     "type": "git",
     "url": "https://github.com/DudeBro249/gqlfake"
   },
-
   "devDependencies": {
     "@types/pluralize": "^0.0.30",
     "typescript": "^5.1.6"
@@ -34,10 +32,8 @@
     "@faker-js/faker": "^8.0.2",
     "chalk": "^4.1.2",
     "commander": "^11.0.0",
-    "dedent-js": "^1.0.1",
     "firebase-admin": "^11.10.1",
     "graphql": "^16.7.1",
-    "pluralize": "^8.0.0",
-    "scoped-eval": "^0.4.2"
+    "pluralize": "^8.0.0"
   }
 }
