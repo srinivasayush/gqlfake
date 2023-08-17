@@ -1,9 +1,12 @@
 #!/usr/bin/env node
 
 import { Command } from 'commander';
-import { generateCommand } from './commands/generate';
-import { exportFirestoreCommand } from './commands/exportFirestore';
 import { TOOL_DESCRIPTION, VERSION } from './constants';
+import {
+  generateCommand,
+  exportFirestoreCommand,
+  compileCommand
+} from './commands';
 
 
 const main = async () => {
@@ -15,6 +18,7 @@ const main = async () => {
   program
   .addCommand(generateCommand)
   .addCommand(exportFirestoreCommand)
+  .addCommand(compileCommand)
   
 
   program.parse()
