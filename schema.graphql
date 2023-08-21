@@ -1,21 +1,33 @@
-type User {
+type User 
+  @init(
+    code: """
+    count = 0
+    """
+  ) {
+  id: Int
+    @generate(
+      code: """
+      count += 1
+      return count
+      """
+    )
   firstName: String 
     @generate(
-      data: """
+      code: """
       firstName = faker.person.firstName()
       return firstName
       """
     )
   lastName: String 
     @generate(
-      data: """
+      code: """
       lastName = faker.person.lastName()
       return lastName
       """
     )
-  emailID: String
+  email: String
     @generate(
-      data: """
+      code: """
       return faker.internet.email({
         firstName: firstName,
         lastName: lastName
