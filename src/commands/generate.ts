@@ -7,14 +7,15 @@ import { integerValidator } from '../utils'
 import { GENERATE_DIRECTIVE_DATA_ARGUMENT_NAME, GENERATE_DIRECTIVE_NAME, INIT_DIRECTIVE_CODE_ARGUMENT_NAME, INIT_DIRECTIVE_NAME } from '../constants';
 import { errorStyle } from '../textStyles';
 import { GraphQLError } from 'graphql';
-import path from 'path'
 import * as vm from 'node:vm'
 import { findDirectiveArguments } from '../utils/directives';
+import { getAbsolutePOSIXPath } from '../utils/absolutePosixPath';
 
 // Options for the generate command
 interface GenerateOptions {
     schemaPath: string
-    numDocuments: number
+    numDocuments: number,
+    dependencyScript?: string
 }
 
 const generateAction = async (options: GenerateOptions) => {
@@ -57,8 +58,14 @@ const generateAction = async (options: GenerateOptions) => {
     // Define a context for all scripts to run
     const scriptContext = vm.createContext({
       faker: faker,
-      console: console
+      console: console,
+      require: require
     })
+
+    if (options.dependencyScript !== undefined) {
+      const dependencyObj = vm.runInContext(`require("${options.dependencyScript}")`, scriptContext)
+      scriptContext.__dependencies = dependencyObj
+    }
 
 
     // Get all types defined in schema
@@ -159,12 +166,18 @@ const generateCommand = new Command()
                     .requiredOption(
                       '-s, --schema-path <path>', 
                       'The path to your GraphQL schema file',
-                      (value: any) => path.resolve(value)
+                      (value: any) => getAbsolutePOSIXPath(value) // transform input parameter
                     )
                     .option<number>('-n, --num-documents <integer>',
                                     'The number of JSON objects to be generated for each type defined in your GraphQL schema',
-                                    (value, _) => integerValidator('--num-documents', value),
+                                    (value, _) => integerValidator('--num-documents', value), // transform input parameter
                                     1 // default value for --num-documents
+                    )
+                    .option(
+                      '-d, --dependency-script <path>',
+                      'The path to the Javascript file that exports your dependencies',
+                      (value: any) => getAbsolutePOSIXPath(value), // transform input parameter
+                      undefined // default value for --dependency-script
                     )
                     .action(generateAction)
 
