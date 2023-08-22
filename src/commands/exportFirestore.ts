@@ -6,6 +6,7 @@ import pluralize from 'pluralize'
 import * as path from 'path'
 import { errorStyle, infoStyle } from '../textStyles';
 import { TOOL_NAME } from '../constants';
+import { getAbsolutePOSIXPath } from '../utils/absolutePosixPath';
 
 // Options for the export-firestore command
 interface ExportFirestoreOptions {
@@ -15,10 +16,8 @@ interface ExportFirestoreOptions {
 const exportFirestoreAction = async (options: ExportFirestoreOptions) => {
     let serviceAccount = {}
 
-    const absoluteKeyPath = path.resolve(options.keypath)
-
     try {
-        serviceAccount = require(absoluteKeyPath)
+        serviceAccount = require(options.keypath)
     } catch (error: any) {
         if (error.code === 'MODULE_NOT_FOUND') {
             console.error(errorStyle(`The serviceAccountKey was not found at ${options.keypath}`))   
@@ -34,7 +33,7 @@ const exportFirestoreAction = async (options: ExportFirestoreOptions) => {
 
     let filenames: string[] = []
     try {
-        const absoluteDataDirectoryPath = path.resolve('./datagen')
+        const absoluteDataDirectoryPath = getAbsolutePOSIXPath('./datagen')
         filenames = await fsPromises.readdir(absoluteDataDirectoryPath, {
             recursive: false
         })
@@ -58,7 +57,7 @@ const exportFirestoreAction = async (options: ExportFirestoreOptions) => {
         console.log(infoStyle(`Adding documents from ./datagen/${filename} to collection "${collectionName}"`));
         
 
-        const absoluteFilePath = path.resolve(`./datagen/${filename}`)
+        const absoluteFilePath = getAbsolutePOSIXPath(`./datagen/${filename}`)
         const data: object[] = require(absoluteFilePath)
 
         data.forEach(async obj => {
@@ -75,7 +74,7 @@ const exportFirestoreCommand = new Command()
                     .requiredOption(
                         '-k, --keypath <path>',
                         'The path to your service account key JSON file',
-                        (value: any) => path.resolve(value)
+                        (value: any) => getAbsolutePOSIXPath(value) // transform input parameter
                     )
                     .action(exportFirestoreAction)
 

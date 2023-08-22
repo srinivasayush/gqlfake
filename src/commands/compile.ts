@@ -4,6 +4,7 @@ import * as path from 'path'
 import { errorStyle, infoStyle } from '../textStyles';
 import { TOOL_NAME } from '../constants';
 import pluralize from 'pluralize';
+import { getAbsolutePOSIXPath } from '../utils/absolutePosixPath';
 
 interface CompileOptions {
     outputPath: string
@@ -24,7 +25,7 @@ const compileAction = async (options: CompileOptions) => {
     // Get the names of all files in the datagen directory
     let filenames: string[] = [];
     try {
-        const absoluteDataDirectoryPath = path.resolve('./datagen');
+        const absoluteDataDirectoryPath = getAbsolutePOSIXPath('./datagen');
         filenames = await fsPromises.readdir(absoluteDataDirectoryPath);
     } catch (error: any) {
         if (error.code === 'ENOENT') {
@@ -47,7 +48,7 @@ const compileAction = async (options: CompileOptions) => {
         const keyName = pluralize(filenameWithoutExtension).toLowerCase();
 
         // Absolute and relative file paths to the file to be read from
-        const absoluteFilePath = path.resolve(`./datagen/${filename}`);
+        const absoluteFilePath = getAbsolutePOSIXPath(`./datagen/${filename}`);
         const relativeFilePath = path.relative('./', absoluteFilePath)
 
         // This check is necessary because the output file could be in the datagen
@@ -79,8 +80,8 @@ const compileCommand = new Command()
                     .option(
                         '-o, --output-path <path>',
                         'The path to the JSON file that you want to compile all the data to',
-                        (value: any) => path.resolve(value),
-                        path.resolve('./datagen/db.json') // default value
+                        (value: any) => getAbsolutePOSIXPath(value), // transform input parameter
+                        getAbsolutePOSIXPath('./datagen/db.json') // default value
                     )
                     .action(compileAction)
 
