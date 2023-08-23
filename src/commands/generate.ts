@@ -56,7 +56,7 @@ const generateAction = async (options: GenerateOptions) => {
 
 
     // Define a context for all scripts to run
-    const scriptContext = vm.createContext({
+    let scriptContext = vm.createContext({
       faker: faker,
       console: console,
       require: require
@@ -64,7 +64,9 @@ const generateAction = async (options: GenerateOptions) => {
 
     if (options.dependencyScript !== undefined) {
       const dependencyObj = vm.runInContext(`require("${options.dependencyScript}")`, scriptContext)
-      scriptContext.__dependencies = dependencyObj
+      scriptContext = vm.createContext({
+        ...scriptContext, ...dependencyObj
+      })
     }
 
 
